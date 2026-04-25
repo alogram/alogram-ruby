@@ -1,252 +1,140 @@
-# alogram_payrisk
+# Alogram PayRisk Ruby SDK
 
-AlogramPayRisk - the Ruby gem for the Alogram PayRisk Engine
+[![Gem Version](https://badge.fury.io/rb/alogram_payrisk.svg)](https://badge.fury.io/rb/alogram_payrisk)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Alogram PayRisk is an AI-native decision engine built for the speed and 
-complexity of the modern commerce era. In a high-velocity world where 
-AI-driven threats evolve in milliseconds, Alogram provides the real-time 
-adaptability and forensic transparency needed to protect your ecosystem 
-with total confidence. We solve the challenge of balancing frictionless 
-growth with regulatory explainability, delivering instant, intelligent 
-risk orchestration at enterprise scale.
+The official Ruby client for the **Alogram PayRisk Engine**. 
 
----
+Alogram is an AI-native risk orchestration platform built for high-velocity commerce. This SDK provides sub-millisecond risk scoring, behavioral intelligence ingestion, and forensic transparency for enterprise ecosystems.
 
-
-## Licensing & Terms
-
-
-Our client libraries and API specifications are open-source under the **Apache License 2.0** 
-to ensure seamless integration into your tech stack.
-
-Use of the Alogram PayRisk API service is proprietary and governed by our 
-[Terms of Service](https://alogram.ai/#tos) and your specific **Enterprise Agreement**, 
-if applicable.
-
-To access the service, you must have:
-*   A valid Alogram API Key.
-*   An active subscription or signed Master Service Agreement.
-
-Unauthorized use, including automated scraping or reverse engineering of the 
-scoring engine, is strictly prohibited.
-
+### 🏎️ High-Performance Networking
+Built for scale, this SDK features:
+*   **HTTP/2 Native**: Multiplexed connections for low-latency parallel scoring.
+*   **Asynchronous I/O**: Built on `httpx` for non-blocking integration into modern Ruby apps (Fibers/Async).
+*   **TLS 1.3**: The highest standard of transit security for sensitive transaction data.
+*   **Spec-compliant**: Automatically kept in sync with the Alogram OpenAPI 3.0.4 specification.
 
 ---
 
+## 📦 Installation
 
-## Support & Traceability
-
-
-Every Alogram API response includes a unique **`x-trace-id`** header. 
-Please include this ID when contacting [packages@alogram.ai](mailto:packages@alogram.ai) 
-regarding specific transactions or errors.
-
-
----
-
-
-## Specification
-
-
-The authoritative OpenAPI specification for this version is available for download:
-**[Download openapi.yaml](https://developers.alogram.ai/openapi.yaml)** | **[Download openapi.json](https://developers.alogram.ai/openapi.json)**
-
-
----
-
-### 🏎️ High Performance & Security
-The Alogram Ruby SDK is built for enterprise-scale workloads:
-*   **Async-Ready**: Built on `httpx` with native support for Fibers and Event Loops.
-*   **Modern Protocols**: Native support for **HTTP/2** multiplexing and **TLS 1.3**.
-*   **Connection Pooling**: Persistent session management for sub-millisecond connection reuse.
-*   **Traceable**: Full support for `x-trace-id` and `x-idempotency-key` for forensic audit compliance.
-
----
-
-## Installation
-
-### Build a gem
-
-To build the Ruby code into a gem:
-
-```shell
-gem build alogram_payrisk.gemspec
-```
-
-Then either install the gem locally:
-
-```shell
-gem install ./alogram_payrisk-0.2.9.gem
-```
-
-(for development, run `gem install --dev ./alogram_payrisk-0.2.9.gem` to install the development dependencies)
-
-or publish the gem to a gem hosting service, e.g. [RubyGems](https://rubygems.org/).
-
-Finally add this to the Gemfile:
-
-    gem 'alogram_payrisk', '~> 0.2.9'
-
-### Install from Git
-
-If the Ruby gem is hosted at a git repository: https://github.com/alogram/alogram-ruby, then add the following in the Gemfile:
-
-    gem 'alogram_payrisk', :git => 'https://github.com/alogram/alogram-ruby.git'
-
-### Include the Ruby code directly
-
-Include the Ruby code directly using `-I` as follows:
-
-```shell
-ruby -Ilib script.rb
-```
-
-## Getting Started
-
-Please follow the [installation](#installation) procedure and then run the following code:
+Add this line to your application's `Gemfile`:
 
 ```ruby
-# Load the gem
-require 'alogram_payrisk'
-
-# Setup authorization
-AlogramPayRisk.configure do |config|
-  # Configure API key authorization: ApiKey
-  config.api_key['x-api-key'] = 'YOUR API KEY'
-  # Uncomment the following line to set a prefix for the API key, e.g. 'Bearer' (defaults to nil)
-  # config.api_key_prefix['x-api-key'] = 'Bearer'
-  # Configure httpx session
-  config.configure_session { |session| 'YOUR CONNECTION CONFIG PROC' }
-
-  # Configure OAuth2 access token for authorization: oAuth2
-  config.access_token = 'YOUR ACCESS TOKEN'
-  # Configure a proc to get access tokens in lieu of the static access_token configuration
-  config.access_token_getter = -> { 'YOUR TOKEN GETTER PROC' } 
-  # Configure httpx session
-  config.configure_session { |session| 'YOUR CONNECTION CONFIG PROC' }
-end
-
-api_instance = AlogramPayRisk::ForensicDataApi.new
-tenant_id = 'tenant_id_example' # String | 
-opts = {
-  x_trace_id: 'x_trace_id_example', # String | Echoed or generated trace ID for tracking requests.
-  x_idempotency_key: 'x_idempotency_key_example', # String | Unique Idempotency-Key sent in the GET request etc.
-  start_time: 'start_time_example', # String | 
-  end_time: 'end_time_example', # String | 
-  page_size: 56, # Integer | 
-  page_token: 'page_token_example' # String | 
-}
-
-begin
-  #Query Historical Assessments
-  result = api_instance.get_fraud_scores(tenant_id, opts)
-  p result
-rescue AlogramPayRisk::ApiError => e
-  puts "Exception when calling ForensicDataApi->get_fraud_scores: #{e}"
-end
-
+gem 'alogram_payrisk', '~> 0.2.10'
 ```
 
-## Documentation for API Endpoints
+And then execute:
+```bash
+bundle install
+```
 
-All URIs are relative to *https://api.alogram.ai*
+---
 
-Class | Method | HTTP request | Description
------------- | ------------- | ------------- | -------------
-*AlogramPayRisk::ForensicDataApi* | [**get_fraud_scores**](docs/ForensicDataApi.md#get_fraud_scores) | **GET** /v1/scores/{tenantId} | Query Historical Assessments
-*AlogramPayRisk::RiskScoringApi* | [**risk_check**](docs/RiskScoringApi.md#risk_check) | **POST** /v1/risk/check | Assess Transaction Risk
-*AlogramPayRisk::RoadmapPreviewApi* | [**account_risk_check**](docs/RoadmapPreviewApi.md#account_risk_check) | **POST** /v1/risk/account/check | Synchronous fraud decision for account/session events
-*AlogramPayRisk::RoadmapPreviewApi* | [**kyc_risk_check**](docs/RoadmapPreviewApi.md#kyc_risk_check) | **POST** /v1/risk/kyc/check | Synchronous decision for KYC/identity verification
-*AlogramPayRisk::SignalIntelligenceApi* | [**ingest_payment_event**](docs/SignalIntelligenceApi.md#ingest_payment_event) | **POST** /v1/events | Ingest Lifecycle Signals
-*AlogramPayRisk::SignalIntelligenceApi* | [**ingest_signals**](docs/SignalIntelligenceApi.md#ingest_signals) | **POST** /v1/signals | Submit Behavioral Intelligence
-*AlogramPayRisk::SystemApi* | [**health_check**](docs/SystemApi.md#health_check) | **GET** /v1/health | Health check for the service
+## 🚀 Quick Start (The "Full Circle" Lifecycle)
 
+Alogram is designed for a three-step risk lifecycle: **Score -> Ingest -> Query.**
 
-## Documentation for Models
+### 1. Configure the Client
+```ruby
+require 'alogram_payrisk'
 
- - [AlogramPayRisk::Account](docs/Account.md)
- - [AlogramPayRisk::AccountCheckRequest](docs/AccountCheckRequest.md)
- - [AlogramPayRisk::AvsResultEnum](docs/AvsResultEnum.md)
- - [AlogramPayRisk::BankTransfer](docs/BankTransfer.md)
- - [AlogramPayRisk::Card](docs/Card.md)
- - [AlogramPayRisk::CardNetworkEnum](docs/CardNetworkEnum.md)
- - [AlogramPayRisk::CategorySignal](docs/CategorySignal.md)
- - [AlogramPayRisk::ChannelEnum](docs/ChannelEnum.md)
- - [AlogramPayRisk::CheckRequest](docs/CheckRequest.md)
- - [AlogramPayRisk::ConfidenceEnum](docs/ConfidenceEnum.md)
- - [AlogramPayRisk::Crypto](docs/Crypto.md)
- - [AlogramPayRisk::CvvResultEnum](docs/CvvResultEnum.md)
- - [AlogramPayRisk::DecisionResponse](docs/DecisionResponse.md)
- - [AlogramPayRisk::DeviceInfo](docs/DeviceInfo.md)
- - [AlogramPayRisk::DiscountCode](docs/DiscountCode.md)
- - [AlogramPayRisk::EntityIds](docs/EntityIds.md)
- - [AlogramPayRisk::EntryMethodEnum](docs/EntryMethodEnum.md)
- - [AlogramPayRisk::ExternalAssessment](docs/ExternalAssessment.md)
- - [AlogramPayRisk::FraudScore](docs/FraudScore.md)
- - [AlogramPayRisk::Identity](docs/Identity.md)
- - [AlogramPayRisk::Integrity](docs/Integrity.md)
- - [AlogramPayRisk::Interaction](docs/Interaction.md)
- - [AlogramPayRisk::InteractionTypeEnum](docs/InteractionTypeEnum.md)
- - [AlogramPayRisk::Invoice](docs/Invoice.md)
- - [AlogramPayRisk::IpInfo](docs/IpInfo.md)
- - [AlogramPayRisk::KycCheckRequest](docs/KycCheckRequest.md)
- - [AlogramPayRisk::KycPayload](docs/KycPayload.md)
- - [AlogramPayRisk::MerchantContext](docs/MerchantContext.md)
- - [AlogramPayRisk::OrderContext](docs/OrderContext.md)
- - [AlogramPayRisk::PayerTypeEnum](docs/PayerTypeEnum.md)
- - [AlogramPayRisk::PaymentAuthorizationOutcome](docs/PaymentAuthorizationOutcome.md)
- - [AlogramPayRisk::PaymentCaptureOutcome](docs/PaymentCaptureOutcome.md)
- - [AlogramPayRisk::PaymentCardTypeEnum](docs/PaymentCardTypeEnum.md)
- - [AlogramPayRisk::PaymentChargeback](docs/PaymentChargeback.md)
- - [AlogramPayRisk::PaymentChargebackOutcome](docs/PaymentChargebackOutcome.md)
- - [AlogramPayRisk::PaymentDisputeOutcome](docs/PaymentDisputeOutcome.md)
- - [AlogramPayRisk::PaymentEvent](docs/PaymentEvent.md)
- - [AlogramPayRisk::PaymentEventType](docs/PaymentEventType.md)
- - [AlogramPayRisk::PaymentMethod](docs/PaymentMethod.md)
- - [AlogramPayRisk::PaymentOutcome](docs/PaymentOutcome.md)
- - [AlogramPayRisk::PaymentRealtimeTypeEnum](docs/PaymentRealtimeTypeEnum.md)
- - [AlogramPayRisk::PaymentRefundOutcome](docs/PaymentRefundOutcome.md)
- - [AlogramPayRisk::PaymentWalletTypeEnum](docs/PaymentWalletTypeEnum.md)
- - [AlogramPayRisk::PostalAddress](docs/PostalAddress.md)
- - [AlogramPayRisk::Problem](docs/Problem.md)
- - [AlogramPayRisk::Purchase](docs/Purchase.md)
- - [AlogramPayRisk::PurchaseInitiatorEnum](docs/PurchaseInitiatorEnum.md)
- - [AlogramPayRisk::PurchaseSequenceEnum](docs/PurchaseSequenceEnum.md)
- - [AlogramPayRisk::PurchaseUsageEnum](docs/PurchaseUsageEnum.md)
- - [AlogramPayRisk::Realtime](docs/Realtime.md)
- - [AlogramPayRisk::ReasonDetail](docs/ReasonDetail.md)
- - [AlogramPayRisk::RiskBreakdown](docs/RiskBreakdown.md)
- - [AlogramPayRisk::RiskCategoryEnum](docs/RiskCategoryEnum.md)
- - [AlogramPayRisk::RiskLevelEnum](docs/RiskLevelEnum.md)
- - [AlogramPayRisk::ScaMethodEnum](docs/ScaMethodEnum.md)
- - [AlogramPayRisk::ScoreRecord](docs/ScoreRecord.md)
- - [AlogramPayRisk::ScoresSuccessResponse](docs/ScoresSuccessResponse.md)
- - [AlogramPayRisk::SignalsAccountVariant](docs/SignalsAccountVariant.md)
- - [AlogramPayRisk::SignalsInteractionVariant](docs/SignalsInteractionVariant.md)
- - [AlogramPayRisk::SignalsRequest](docs/SignalsRequest.md)
- - [AlogramPayRisk::StoredCredentialContext](docs/StoredCredentialContext.md)
- - [AlogramPayRisk::ThreeDSData](docs/ThreeDSData.md)
- - [AlogramPayRisk::Wallet](docs/Wallet.md)
+AlogramPayRisk.configure do |config|
+  config.api_key['x-api-key'] = 'sk_live_your_key'
+  # For local development against the emulator:
+  # config.host = 'localhost:8080'
+  # config.scheme = 'http'
+end
 
+api = AlogramPayRisk::RiskScoringApi.new
+```
 
-## Documentation for Authorization
+### 2. Request a Risk Decision
+Call Alogram *before* you charge the customer to get a real-time decision.
 
+```ruby
+request = AlogramPayRisk::CheckRequest.new({
+  entities: {
+    tenant_id: "your_tenant_id",
+    session_id: "sid_550e8400",
+    client_id: "cid_998234"
+  },
+  purchase: {
+    amount: 99.99,
+    currency: "USD",
+    payment_method: {
+      type: "card",
+      bin: "411111",
+      card_network: "visa"
+    }
+  }
+})
 
-Authentication schemes defined for the API:
-### ApiKey
+begin
+  # Decision is returned in < 100ms
+  decision = api.risk_check("idk_unique_key_123", request)
+  
+  if decision.decision == 'approve'
+    puts "✅ Transaction approved (Score: #{decision.decision_score})"
+    # Proceed with payment...
+  else
+    puts "❌ Transaction declined: #{decision.reason_codes}"
+  end
+rescue AlogramPayRisk::ApiError => e
+  puts "Error: #{e.code} - #{e.response_body}"
+end
+```
 
+### 3. Ingest Lifecycle Events
+Once the payment is processed, notify Alogram of the outcome to improve your AI model's accuracy.
 
-- **Type**: API key
-- **API key parameter name**: x-api-key
-- **Location**: HTTP header
+```ruby
+events_api = AlogramPayRisk::SignalIntelligenceApi.new
 
-### oAuth2
+event = AlogramPayRisk::PaymentEvent.new({
+  event_type: 'authorization',
+  payment_intent_id: decision.payment_intent_id,
+  outcome: { 
+    status: 'success', 
+    processor_response_code: '00' 
+  }
+})
 
+events_api.ingest_payment_event("idk_event_123", event)
+```
 
-- **Type**: OAuth
-- **Flow**: accessCode
-- **Authorization URL**: https://api.alogram.ai/oauth2/authorize
-- **Scopes**: 
-  - payrisk.read: Read fraud scores and decisions.
-  - payrisk.write: Submit fraud checks, events, and signals.
+---
 
+## 🧪 Local Development & Testing
+
+We provide a **Local Emulator** to let you test without network access or production keys.
+
+1.  **Start the Emulator**:
+    ```bash
+    docker run -p 8080:8080 us-docker.pkg.dev/alogram-public/sdk/payrisk-emulator:0.2.10
+    ```
+2.  **Point the SDK to Localhost**:
+    ```ruby
+    AlogramPayRisk.configure do |config|
+      config.scheme = 'http'
+      config.host = 'localhost:8080'
+      config.api_key['x-api-key'] = 'test' # Accepts any string
+    end
+    ```
+
+---
+
+## 🛡️ Error Handling
+
+| Status | Meaning | Action |
+| :--- | :--- | :--- |
+| `401` | Unauthorized | Check your `x-api-key` configuration. |
+| `422` | Validation Error | Ensure IDs follow the required patterns (e.g., `sid_`, `idk_`). |
+| `429` | Rate Limited | Implement an exponential backoff. |
+| `5xx` | Alogram Downtime | Fallback to a default 'approve' to avoid conversion loss. |
+
+---
+
+## ⚖️ License
+
+Apache License 2.0. See [LICENSE](LICENSE) for details.

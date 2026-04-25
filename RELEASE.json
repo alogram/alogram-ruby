@@ -1,9 +1,9 @@
 {
   "sdk": "ruby",
-  "version": "0.2.9",
-  "monorepo_commit": "2596bfbe92f49e4c4cc4861bd5e414ecf12653a9",
+  "version": "0.2.10",
+  "monorepo_commit": "5469476c646798a3f913e0d93cfc380aa3bff4ef",
   "openapi_path": "apis/payrisk-v1/openapi.yaml",
-  "openapi_commit": "2596bfbe92f49e4c4cc4861bd5e414ecf12653a9",
+  "openapi_commit": "5469476c646798a3f913e0d93cfc380aa3bff4ef",
   "generator": "openapi-generator-cli@7.19.0",
-  "built_at": "2026-04-24T09:05:43Z"
+  "built_at": "2026-04-25T08:14:44Z"
 }
