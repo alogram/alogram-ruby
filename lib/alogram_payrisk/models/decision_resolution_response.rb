@@ -14,44 +14,22 @@ require 'date'
 require 'time'
 
 module AlogramPayRisk
-  # Interaction batch signal variant (one or more user interactions).
-  class SignalsInteractionVariant < ApiModelBase
-    # Value for interaction signals.
-    attr_accessor :signal_type
+  class DecisionResolutionResponse < ApiModelBase
+    # Indicates if the decision was successfully resolved and persisted.
+    attr_accessor :ok
 
-    attr_accessor :entities
+    # Operational summary message.
+    attr_accessor :message
 
-    # One or more interactions associated with the signal.
-    attr_accessor :interactions
-
-    class EnumAttributeValidator
-      attr_reader :datatype
-      attr_reader :allowable_values
-
-      def initialize(datatype, allowable_values)
-        @allowable_values = allowable_values.map do |value|
-          case datatype.to_s
-          when /Integer/i
-            value.to_i
-          when /Float/i
-            value.to_f
-          else
-            value
-          end
-        end
-      end
-
-      def valid?(value)
-        !value || allowable_values.include?(value)
-      end
-    end
+    # ISO-8601 timestamp of resolution completion.
+    attr_accessor :resolved_at
 
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
-        :'signal_type' => :'signalType',
-        :'entities' => :'entities',
-        :'interactions' => :'interactions'
+        :'ok' => :'ok',
+        :'message' => :'message',
+        :'resolved_at' => :'resolvedAt'
       }
     end
 
@@ -68,9 +46,9 @@ module AlogramPayRisk
     # Attribute type mapping.
     def self.openapi_types
       {
-        :'signal_type' => :'String',
-        :'entities' => :'EntityIds',
-        :'interactions' => :'Array<Interaction>'
+        :'ok' => :'Boolean',
+        :'message' => :'String',
+        :'resolved_at' => :'Time'
       }
     end
 
@@ -84,36 +62,34 @@ module AlogramPayRisk
     # @param [Hash] attributes Model attributes in the form of hash
     def initialize(attributes = {})
       if (!attributes.is_a?(Hash))
-        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::SignalsInteractionVariant` initialize method"
+        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::DecisionResolutionResponse` initialize method"
       end
 
       # check to see if the attribute exists and convert string to symbol for hash key
       acceptable_attribute_map = self.class.acceptable_attribute_map
       attributes = attributes.each_with_object({}) { |(k, v), h|
         if (!acceptable_attribute_map.key?(k.to_sym))
-          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::SignalsInteractionVariant`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
+          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::DecisionResolutionResponse`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
         end
         h[k.to_sym] = v
       }
 
-      if attributes.key?(:'signal_type')
-        self.signal_type = attributes[:'signal_type']
+      if attributes.key?(:'ok')
+        self.ok = attributes[:'ok']
       else
-        self.signal_type = nil
+        self.ok = nil
       end
 
-      if attributes.key?(:'entities')
-        self.entities = attributes[:'entities']
+      if attributes.key?(:'message')
+        self.message = attributes[:'message']
       else
-        self.entities = nil
+        self.message = nil
       end
 
-      if attributes.key?(:'interactions')
-        if (value = attributes[:'interactions']).is_a?(Array)
-          self.interactions = value
-        end
+      if attributes.key?(:'resolved_at')
+        self.resolved_at = attributes[:'resolved_at']
       else
-        self.interactions = nil
+        self.resolved_at = nil
       end
     end
 
@@ -122,24 +98,16 @@ module AlogramPayRisk
     def list_invalid_properties
       warn '[DEPRECATED] the `list_invalid_properties` method is obsolete'
       invalid_properties = Array.new
-      if @signal_type.nil?
-        invalid_properties.push('invalid value for "signal_type", signal_type cannot be nil.')
+      if @ok.nil?
+        invalid_properties.push('invalid value for "ok", ok cannot be nil.')
       end
 
-      if @entities.nil?
-        invalid_properties.push('invalid value for "entities", entities cannot be nil.')
+      if @message.nil?
+        invalid_properties.push('invalid value for "message", message cannot be nil.')
       end
 
-      if @interactions.nil?
-        invalid_properties.push('invalid value for "interactions", interactions cannot be nil.')
-      end
-
-      if @interactions.length > 1000
-        invalid_properties.push('invalid value for "interactions", number of items must be less than or equal to 1000.')
-      end
-
-      if @interactions.length < 1
-        invalid_properties.push('invalid value for "interactions", number of items must be greater than or equal to 1.')
+      if @resolved_at.nil?
+        invalid_properties.push('invalid value for "resolved_at", resolved_at cannot be nil.')
       end
 
       invalid_properties
@@ -149,51 +117,40 @@ module AlogramPayRisk
     # @return true if the model is valid
     def valid?
       warn '[DEPRECATED] the `valid?` method is obsolete'
-      return false if @signal_type.nil?
-      signal_type_validator = EnumAttributeValidator.new('String', ["interaction"])
-      return false unless signal_type_validator.valid?(@signal_type)
-      return false if @entities.nil?
-      return false if @interactions.nil?
-      return false if @interactions.length > 1000
-      return false if @interactions.length < 1
+      return false if @ok.nil?
+      return false if @message.nil?
+      return false if @resolved_at.nil?
       true
     end
 
-    # Custom attribute writer method checking allowed values (enum).
-    # @param [Object] signal_type Object to be assigned
-    def signal_type=(signal_type)
-      validator = EnumAttributeValidator.new('String', ["interaction"])
-      unless validator.valid?(signal_type)
-        fail ArgumentError, "invalid value for \"signal_type\", must be one of #{validator.allowable_values}."
+    # Custom attribute writer method with validation
+    # @param [Object] ok Value to be assigned
+    def ok=(ok)
+      if ok.nil?
+        fail ArgumentError, 'ok cannot be nil'
       end
-      @signal_type = signal_type
+
+      @ok = ok
     end
 
     # Custom attribute writer method with validation
-    # @param [Object] entities Value to be assigned
-    def entities=(entities)
-      if entities.nil?
-        fail ArgumentError, 'entities cannot be nil'
+    # @param [Object] message Value to be assigned
+    def message=(message)
+      if message.nil?
+        fail ArgumentError, 'message cannot be nil'
       end
 
-      @entities = entities
+      @message = message
     end
 
     # Custom attribute writer method with validation
-    # @param [Object] interactions Value to be assigned
-    def interactions=(interactions)
-      if interactions.nil?
-        fail ArgumentError, 'interactions cannot be nil'
-      end
-      if interactions.length > 1000
-        fail ArgumentError, 'invalid value for "interactions", number of items must be less than or equal to 1000.'
+    # @param [Object] resolved_at Value to be assigned
+    def resolved_at=(resolved_at)
+      if resolved_at.nil?
+        fail ArgumentError, 'resolved_at cannot be nil'
       end
 
-      if interactions.length < 1
-        fail ArgumentError, 'invalid value for "interactions", number of items must be greater than or equal to 1.'
-      end
-
-      @interactions = interactions
+      @resolved_at = resolved_at
     end
 
     # Checks equality by comparing each attribute.
@@ -201,9 +158,9 @@ module AlogramPayRisk
     def ==(o)
       return true if self.equal?(o)
       self.class == o.class &&
-          signal_type == o.signal_type &&
-          entities == o.entities &&
-          interactions == o.interactions
+          ok == o.ok &&
+          message == o.message &&
+          resolved_at == o.resolved_at
     end
 
     # @see the `==` method
@@ -215,7 +172,7 @@ module AlogramPayRisk
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [signal_type, entities, interactions].hash
+      [ok, message, resolved_at].hash
     end
 
     # Builds the object from hash
