@@ -14,15 +14,23 @@ require 'date'
 require 'time'
 
 module AlogramPayRisk
-  # Interaction batch signal variant (one or more user interactions).
-  class SignalsInteractionVariant < ApiModelBase
-    # Value for interaction signals.
-    attr_accessor :signal_type
+  class DecisionResolutionRequest < ApiModelBase
+    # The business entity type being resolved.
+    attr_accessor :target_type
 
-    attr_accessor :entities
+    # The unique identifier of the target entity under review (e.g. pi_*).
+    attr_accessor :target_id
 
-    # One or more interactions associated with the signal.
-    attr_accessor :interactions
+    # The resolution action to apply to the target.
+    attr_accessor :decision
+
+    attr_accessor :analyst
+
+    # The ML-feedback ground-truth reason classification.
+    attr_accessor :resolution_reason
+
+    # Additional operational notes or reasoning for this resolution.
+    attr_accessor :notes
 
     class EnumAttributeValidator
       attr_reader :datatype
@@ -49,9 +57,12 @@ module AlogramPayRisk
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
-        :'signal_type' => :'signalType',
-        :'entities' => :'entities',
-        :'interactions' => :'interactions'
+        :'target_type' => :'targetType',
+        :'target_id' => :'targetId',
+        :'decision' => :'decision',
+        :'analyst' => :'analyst',
+        :'resolution_reason' => :'resolutionReason',
+        :'notes' => :'notes'
       }
     end
 
@@ -68,9 +79,12 @@ module AlogramPayRisk
     # Attribute type mapping.
     def self.openapi_types
       {
-        :'signal_type' => :'String',
-        :'entities' => :'EntityIds',
-        :'interactions' => :'Array<Interaction>'
+        :'target_type' => :'String',
+        :'target_id' => :'String',
+        :'decision' => :'String',
+        :'analyst' => :'DecisionResolutionRequestAnalyst',
+        :'resolution_reason' => :'String',
+        :'notes' => :'String'
       }
     end
 
@@ -84,36 +98,50 @@ module AlogramPayRisk
     # @param [Hash] attributes Model attributes in the form of hash
     def initialize(attributes = {})
       if (!attributes.is_a?(Hash))
-        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::SignalsInteractionVariant` initialize method"
+        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::DecisionResolutionRequest` initialize method"
       end
 
       # check to see if the attribute exists and convert string to symbol for hash key
       acceptable_attribute_map = self.class.acceptable_attribute_map
       attributes = attributes.each_with_object({}) { |(k, v), h|
         if (!acceptable_attribute_map.key?(k.to_sym))
-          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::SignalsInteractionVariant`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
+          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::DecisionResolutionRequest`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
         end
         h[k.to_sym] = v
       }
 
-      if attributes.key?(:'signal_type')
-        self.signal_type = attributes[:'signal_type']
+      if attributes.key?(:'target_type')
+        self.target_type = attributes[:'target_type']
       else
-        self.signal_type = nil
+        self.target_type = nil
       end
 
-      if attributes.key?(:'entities')
-        self.entities = attributes[:'entities']
+      if attributes.key?(:'target_id')
+        self.target_id = attributes[:'target_id']
       else
-        self.entities = nil
+        self.target_id = nil
       end
 
-      if attributes.key?(:'interactions')
-        if (value = attributes[:'interactions']).is_a?(Array)
-          self.interactions = value
-        end
+      if attributes.key?(:'decision')
+        self.decision = attributes[:'decision']
       else
-        self.interactions = nil
+        self.decision = nil
+      end
+
+      if attributes.key?(:'analyst')
+        self.analyst = attributes[:'analyst']
+      else
+        self.analyst = nil
+      end
+
+      if attributes.key?(:'resolution_reason')
+        self.resolution_reason = attributes[:'resolution_reason']
+      else
+        self.resolution_reason = nil
+      end
+
+      if attributes.key?(:'notes')
+        self.notes = attributes[:'notes']
       end
     end
 
@@ -122,24 +150,24 @@ module AlogramPayRisk
     def list_invalid_properties
       warn '[DEPRECATED] the `list_invalid_properties` method is obsolete'
       invalid_properties = Array.new
-      if @signal_type.nil?
-        invalid_properties.push('invalid value for "signal_type", signal_type cannot be nil.')
+      if @target_type.nil?
+        invalid_properties.push('invalid value for "target_type", target_type cannot be nil.')
       end
 
-      if @entities.nil?
-        invalid_properties.push('invalid value for "entities", entities cannot be nil.')
+      if @target_id.nil?
+        invalid_properties.push('invalid value for "target_id", target_id cannot be nil.')
       end
 
-      if @interactions.nil?
-        invalid_properties.push('invalid value for "interactions", interactions cannot be nil.')
+      if @decision.nil?
+        invalid_properties.push('invalid value for "decision", decision cannot be nil.')
       end
 
-      if @interactions.length > 1000
-        invalid_properties.push('invalid value for "interactions", number of items must be less than or equal to 1000.')
+      if @analyst.nil?
+        invalid_properties.push('invalid value for "analyst", analyst cannot be nil.')
       end
 
-      if @interactions.length < 1
-        invalid_properties.push('invalid value for "interactions", number of items must be greater than or equal to 1.')
+      if @resolution_reason.nil?
+        invalid_properties.push('invalid value for "resolution_reason", resolution_reason cannot be nil.')
       end
 
       invalid_properties
@@ -149,51 +177,68 @@ module AlogramPayRisk
     # @return true if the model is valid
     def valid?
       warn '[DEPRECATED] the `valid?` method is obsolete'
-      return false if @signal_type.nil?
-      signal_type_validator = EnumAttributeValidator.new('String', ["interaction"])
-      return false unless signal_type_validator.valid?(@signal_type)
-      return false if @entities.nil?
-      return false if @interactions.nil?
-      return false if @interactions.length > 1000
-      return false if @interactions.length < 1
+      return false if @target_type.nil?
+      target_type_validator = EnumAttributeValidator.new('String', ["payment_intent", "account_event", "agent_delegation"])
+      return false unless target_type_validator.valid?(@target_type)
+      return false if @target_id.nil?
+      return false if @decision.nil?
+      decision_validator = EnumAttributeValidator.new('String', ["approve", "block", "challenge", "escalate"])
+      return false unless decision_validator.valid?(@decision)
+      return false if @analyst.nil?
+      return false if @resolution_reason.nil?
+      resolution_reason_validator = EnumAttributeValidator.new('String', ["legit_human", "legit_agent_authorized", "unauthorized_agent", "card_testing", "account_takeover", "friendly_fraud"])
+      return false unless resolution_reason_validator.valid?(@resolution_reason)
       true
     end
 
     # Custom attribute writer method checking allowed values (enum).
-    # @param [Object] signal_type Object to be assigned
-    def signal_type=(signal_type)
-      validator = EnumAttributeValidator.new('String', ["interaction"])
-      unless validator.valid?(signal_type)
-        fail ArgumentError, "invalid value for \"signal_type\", must be one of #{validator.allowable_values}."
+    # @param [Object] target_type Object to be assigned
+    def target_type=(target_type)
+      validator = EnumAttributeValidator.new('String', ["payment_intent", "account_event", "agent_delegation"])
+      unless validator.valid?(target_type)
+        fail ArgumentError, "invalid value for \"target_type\", must be one of #{validator.allowable_values}."
       end
-      @signal_type = signal_type
+      @target_type = target_type
     end
 
     # Custom attribute writer method with validation
-    # @param [Object] entities Value to be assigned
-    def entities=(entities)
-      if entities.nil?
-        fail ArgumentError, 'entities cannot be nil'
+    # @param [Object] target_id Value to be assigned
+    def target_id=(target_id)
+      if target_id.nil?
+        fail ArgumentError, 'target_id cannot be nil'
       end
 
-      @entities = entities
+      @target_id = target_id
+    end
+
+    # Custom attribute writer method checking allowed values (enum).
+    # @param [Object] decision Object to be assigned
+    def decision=(decision)
+      validator = EnumAttributeValidator.new('String', ["approve", "block", "challenge", "escalate"])
+      unless validator.valid?(decision)
+        fail ArgumentError, "invalid value for \"decision\", must be one of #{validator.allowable_values}."
+      end
+      @decision = decision
     end
 
     # Custom attribute writer method with validation
-    # @param [Object] interactions Value to be assigned
-    def interactions=(interactions)
-      if interactions.nil?
-        fail ArgumentError, 'interactions cannot be nil'
-      end
-      if interactions.length > 1000
-        fail ArgumentError, 'invalid value for "interactions", number of items must be less than or equal to 1000.'
+    # @param [Object] analyst Value to be assigned
+    def analyst=(analyst)
+      if analyst.nil?
+        fail ArgumentError, 'analyst cannot be nil'
       end
 
-      if interactions.length < 1
-        fail ArgumentError, 'invalid value for "interactions", number of items must be greater than or equal to 1.'
-      end
+      @analyst = analyst
+    end
 
-      @interactions = interactions
+    # Custom attribute writer method checking allowed values (enum).
+    # @param [Object] resolution_reason Object to be assigned
+    def resolution_reason=(resolution_reason)
+      validator = EnumAttributeValidator.new('String', ["legit_human", "legit_agent_authorized", "unauthorized_agent", "card_testing", "account_takeover", "friendly_fraud"])
+      unless validator.valid?(resolution_reason)
+        fail ArgumentError, "invalid value for \"resolution_reason\", must be one of #{validator.allowable_values}."
+      end
+      @resolution_reason = resolution_reason
     end
 
     # Checks equality by comparing each attribute.
@@ -201,9 +246,12 @@ module AlogramPayRisk
     def ==(o)
       return true if self.equal?(o)
       self.class == o.class &&
-          signal_type == o.signal_type &&
-          entities == o.entities &&
-          interactions == o.interactions
+          target_type == o.target_type &&
+          target_id == o.target_id &&
+          decision == o.decision &&
+          analyst == o.analyst &&
+          resolution_reason == o.resolution_reason &&
+          notes == o.notes
     end
 
     # @see the `==` method
@@ -215,7 +263,7 @@ module AlogramPayRisk
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [signal_type, entities, interactions].hash
+      [target_type, target_id, decision, analyst, resolution_reason, notes].hash
     end
 
     # Builds the object from hash
