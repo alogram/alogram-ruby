@@ -14,37 +14,19 @@ require 'date'
 require 'time'
 
 module AlogramPayRisk
-  # Capture outcome details.
-  class PaymentCaptureOutcome < ApiModelBase
-    # Capture status.
-    attr_accessor :status
+  # Structured policy metadata and context active during transaction evaluation.
+  class DecisionResponsePolicy < ApiModelBase
+    # The unique identifier of the active policy.
+    attr_accessor :id
 
-    class EnumAttributeValidator
-      attr_reader :datatype
-      attr_reader :allowable_values
-
-      def initialize(datatype, allowable_values)
-        @allowable_values = allowable_values.map do |value|
-          case datatype.to_s
-          when /Integer/i
-            value.to_i
-          when /Float/i
-            value.to_f
-          else
-            value
-          end
-        end
-      end
-
-      def valid?(value)
-        !value || allowable_values.include?(value)
-      end
-    end
+    # The name/version of the ruleset configuration.
+    attr_accessor :rule_set
 
     # Attribute mapping from ruby-style variable name to JSON key.
     def self.attribute_map
       {
-        :'status' => :'status'
+        :'id' => :'id',
+        :'rule_set' => :'ruleSet'
       }
     end
 
@@ -61,7 +43,8 @@ module AlogramPayRisk
     # Attribute type mapping.
     def self.openapi_types
       {
-        :'status' => :'String'
+        :'id' => :'String',
+        :'rule_set' => :'String'
       }
     end
 
@@ -75,20 +58,24 @@ module AlogramPayRisk
     # @param [Hash] attributes Model attributes in the form of hash
     def initialize(attributes = {})
       if (!attributes.is_a?(Hash))
-        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::PaymentCaptureOutcome` initialize method"
+        fail ArgumentError, "The input argument (attributes) must be a hash in `AlogramPayRisk::DecisionResponsePolicy` initialize method"
       end
 
       # check to see if the attribute exists and convert string to symbol for hash key
       acceptable_attribute_map = self.class.acceptable_attribute_map
       attributes = attributes.each_with_object({}) { |(k, v), h|
         if (!acceptable_attribute_map.key?(k.to_sym))
-          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::PaymentCaptureOutcome`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
+          fail ArgumentError, "`#{k}` is not a valid attribute in `AlogramPayRisk::DecisionResponsePolicy`. Please check the name to make sure it's valid. List of attributes: " + acceptable_attribute_map.keys.inspect
         end
         h[k.to_sym] = v
       }
 
-      if attributes.key?(:'status')
-        self.status = attributes[:'status']
+      if attributes.key?(:'id')
+        self.id = attributes[:'id']
+      end
+
+      if attributes.key?(:'rule_set')
+        self.rule_set = attributes[:'rule_set']
       end
     end
 
@@ -104,19 +91,7 @@ module AlogramPayRisk
     # @return true if the model is valid
     def valid?
       warn '[DEPRECATED] the `valid?` method is obsolete'
-      status_validator = EnumAttributeValidator.new('String', ["none", "partial", "full", "failed"])
-      return false unless status_validator.valid?(@status)
       true
-    end
-
-    # Custom attribute writer method checking allowed values (enum).
-    # @param [Object] status Object to be assigned
-    def status=(status)
-      validator = EnumAttributeValidator.new('String', ["none", "partial", "full", "failed"])
-      unless validator.valid?(status)
-        fail ArgumentError, "invalid value for \"status\", must be one of #{validator.allowable_values}."
-      end
-      @status = status
     end
 
     # Checks equality by comparing each attribute.
@@ -124,7 +99,8 @@ module AlogramPayRisk
     def ==(o)
       return true if self.equal?(o)
       self.class == o.class &&
-          status == o.status
+          id == o.id &&
+          rule_set == o.rule_set
     end
 
     # @see the `==` method
@@ -136,7 +112,7 @@ module AlogramPayRisk
     # Calculates hash code according to all attributes.
     # @return [Integer] Hash code
     def hash
-      [status].hash
+      [id, rule_set].hash
     end
 
     # Builds the object from hash
