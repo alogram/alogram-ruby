@@ -21,7 +21,7 @@ Built for scale, this SDK features:
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'alogram_payrisk', '~> 0.3.0'
+gem 'alogram_payrisk', '~> 0.3.1'
 ```
 
 And then execute:
@@ -111,7 +111,7 @@ We provide a **Local Emulator** to let you test without network access or produc
 
 1.  **Start the Emulator**:
     ```bash
-    docker run -p 8080:8080 us-docker.pkg.dev/alogram-public/sdk/payrisk-emulator:0.3.0
+    docker run -p 8080:8080 us-docker.pkg.dev/alogram-public/sdk/payrisk-emulator:0.3.1
     ```
 2.  **Point the SDK to Localhost**:
     ```ruby
